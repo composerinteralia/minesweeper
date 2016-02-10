@@ -43,17 +43,12 @@ Tile.prototype.allBombsFlagged = function () {
   return this.adjacentBombCount() === this.adjacentFlagCount();
 }
 
-Tile.prototype.explorableNeighbors = function () {
-  return !this.bombed &&
-         (this.zeroNeighboringBombs() || this.allBombsFlagged());
-}
-
 Tile.prototype.explore = function () {
   if (this.flagged) return this;
 
   this.explored = true;
 
-  if (this.explorableNeighbors()) {
+  if (!this.bombed && this.allBombsFlagged()) {
     this.neighbors().forEach(function(tile) {
       if (!tile.explored) {
         tile.explore();
@@ -98,9 +93,5 @@ Tile.prototype.toggleFlag = function () {
 
   return false;
 };
-
-Tile.prototype.zeroNeighboringBombs = function () {
-  return this.adjacentBombCount() === 0;
-}
 
 module.exports = Tile;
