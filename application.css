@@ -1,4 +1,4 @@
-html, body, main, ul, li, div {
+html, body, header, main, h1, p, ul, li, div, span {
   margin: 0;
   padding: 0;
   border: 0;
@@ -23,14 +23,30 @@ ul {
 
 body {
   background: #eee;
+  font-family: 'Lora';
 }
 
 #minesweeper {
   text-align: center;
 }
 
+header {
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 30px;
+  margin-bottom: 5px;
+}
+
+p {
+  text-align: center;
+  font-size: 14px;
+}
+
 .board {
-  margin: 50px auto;
+  margin: auto;
   height: 280px;
   width: 280px;
   border: 5px solid #bbb;
