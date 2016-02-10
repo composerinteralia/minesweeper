@@ -81,6 +81,7 @@ Tile.prototype.neighbors = function() {
     return that.board.grid[coord[0]][coord[1]];
   });
 
+  // cache neighbors
   this.neighboringTiles = neighboringTiles;
   return neighboringTiles;
 };

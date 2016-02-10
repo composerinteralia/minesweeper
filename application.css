@@ -1,0 +1,103 @@
+html, body, main, ul, li, div {
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  font: inherit;
+  text-align: inherit;
+  vertical-align: inherit;
+  color: inherit;
+  background: transparent;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+.group:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+body {
+  background: #eee;
+}
+
+#minesweeper {
+  text-align: center;
+}
+
+.board {
+  margin: 50px auto;
+  height: 280px;
+  width: 280px;
+  border: 5px solid #bbb;
+  border-style: ridge;
+}
+
+.tile {
+  float: left;
+  width: 20px;
+  height: 20px;
+  background: #aaa;
+  padding: 2px;
+  border: 2px solid #ccc;
+  border-style: outset;
+}
+
+.tile:hover {
+  background: #999;
+  cursor: pointer;
+}
+
+span.bomb {
+  position: relative;
+  top: -4px;
+}
+
+.explored {
+  border-style: inset;
+}
+
+.explored:hover {
+  cursor: default;
+  background: #aaa;
+}
+
+.flagged {
+  color: red;
+}
+
+.bomb-count-1 {
+  color: blue;
+}
+
+.bomb-count-2 {
+  color: green;
+}
+
+.bomb-count-3 {
+  color: red;
+}
+
+.bomb-count-4 {
+  color: darkblue;
+}
+
+.bomb-count-5 {
+  color: brown;
+}
+
+.bomb-count-6 {
+  color: cyan;
+}
+
+.bomb-count-7 {
+  color: black;
+}
+
+.bomb-count-8 {
+  color: grey;
+}

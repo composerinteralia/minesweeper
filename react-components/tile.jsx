@@ -16,7 +16,7 @@ module.exports = React.createClass({
 
       if (tile.bombed) {
         htmlClasses.push("bombed");
-        face = "💣";
+        face = <span className="bomb" >💣</span>;
 
       } else {
         var count = tile.adjacentBombCount();
