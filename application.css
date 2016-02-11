@@ -88,6 +88,20 @@ header > nav > a {
   font-size: 15px;
 }
 
+@-webkit-keyframes shake {
+  0% { -webkit-transform: translate(2px, 1px); }
+	10% { -webkit-transform: translate(-1px, -2px); }
+	20% { -webkit-transform: translate(-3px, 0px); }
+	30% { -webkit-transform: translate(0px, 2px); }
+	40% { -webkit-transform: translate(1px, -1px); }
+	50% { -webkit-transform: translate(-1px, 2px); }
+	60% { -webkit-transform: translate(-3px, 1px); }
+	70% { -webkit-transform: translate(2px, 1px); }
+	80% { -webkit-transform: translate(-1px, -1px); }
+	90% { -webkit-transform: translate(2px, 2px); }
+	100% { -webkit-transform: translate(1px, -2px); }
+}
+
 .board {
   margin: auto;
   height: 280px;

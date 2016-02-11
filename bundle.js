@@ -19979,13 +19979,21 @@
 	
 	    if (tile.board.lost()) {
 	      var x = Math.round((Math.random() - 0.55) * (window.innerWidth - 300));
-	      var y = Math.round((Math.random() - 0.55) * (window.innerHeight - 300));
+	      var y = Math.round((Math.random() - 0.6) * (window.innerHeight - 300));
 	      var degrees = Math.round((Math.random() - 0.5) * 1860);
 	      var seconds = Math.random();
 	
 	      htmlStyle = {
 	        transform: "translate(" + x + "px, " + y + "px) rotate(" + degrees + "deg)",
 	        transition: "transform " + seconds + "s"
+	      };
+	    }
+	
+	    if (tile.board.won()) {
+	      htmlStyle = {
+	        WebkitAnimationName: "shake",
+	        WebkitAnimationDuration: Math.random() + "s",
+	        WebkitAnimationIterationCount: "2"
 	      };
 	    }
 	
