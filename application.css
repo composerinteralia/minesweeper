@@ -1,4 +1,4 @@
-html, body, header, main, h1, p, ul, li, div, span {
+html, body, header, footer, main, h1, p, a, ul, li, div, span {
   margin: 0;
   padding: 0;
   border: 0;
@@ -22,35 +22,77 @@ ul {
 }
 
 body {
-  background: url('background.jpg') no-repeat;
+  background: url('images/background.jpg') no-repeat;
   background-size: cover;
   font-family: 'Lora';
-}
-
-#minesweeper {
   text-align: center;
 }
 
 header {
   padding: 20px;
+  position: relative;
+  z-index: 3;
 }
 
-h1 {
-  text-align: center;
+.name {
+  font-size: 24px;
+  float: left;
+}
+
+header > nav {
+  float: right;
+}
+
+header > nav > a {
+  float: left;
+}
+
+.portfolio {
+  margin: 5px 10px;
+  height: 30px;
+  width: 30px;
+  background: url('images/folder.png');
+  background-size: cover;
+}
+
+.github {
+  margin: 0 10px;
+  height: 40px;
+  width: 40px;
+  background: url('images/github.png');
+  background-size: cover;
+}
+
+.linkedin {
+  margin: 5px 10px;
+  height: 30px;
+  width: 30px;
+  background: url('images/linkedin.png');
+  background-size: cover;
+}
+
+.game-header {
+  position: relative;
+  z-index: 2;
+  top: -40px;
+  margin-bottom: -20px;
+}
+
+.game-header > h1 {
   font-size: 30px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
-p {
-  text-align: center;
-  font-size: 14px;
+.game-header > p {
+  margin: 1px;
+  font-size: 15px;
 }
 
 .board {
   margin: auto;
   height: 280px;
   width: 280px;
-  background: url('bomb.jpg') no-repeat;
+  background: url('images/bomb.jpg') no-repeat;
   background-position: center;
   background-size: cover;
   border: 5px solid #bbb;
@@ -122,15 +164,21 @@ span.bomb {
   color: grey;
 }
 
-.gameover {
-  position: relative;
-  z-index: 50;
-  font-weight: bold;
+.messages {
   margin-top: 20px;
+  position: relative;
+  z-index: 2;
+  font-size: 15px;
+}
+
+.gameover {
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 5px;
 }
 
 .lost {
-  color: red;
+  color: #f10;
 }
 
 .won {

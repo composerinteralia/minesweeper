@@ -19665,30 +19665,62 @@
 	  displayName: 'exports',
 	
 	  getInitialState: function () {
-	    return { board: new Minesweeper(10, 10) };
+	    return { board: new Minesweeper(10, 10), firstTurn: true };
+	  },
+	
+	  componentDidMount: function () {
+	    document.addEventListener('keypress', function (e) {
+	      if (!this.state.firstTurn && e.keyCode === 13) {
+	        this.setState({ board: new Minesweeper(10, 10), firstTurn: true });
+	      }
+	    }.bind(this));
+	  },
+	
+	  componentWillUnmount: function () {
+	    document.removeEventListener('keypress');
 	  },
 	
 	  render: function () {
+	    var board = this.state.board;
+	
 	    var gameOver;
-	    if (this.state.board.won()) {
+	    if (board.won()) {
 	      gameOver = React.createElement(
-	        'div',
+	        'p',
 	        { className: 'gameover won' },
 	        'Congratulations! You won!'
 	      );
-	    } else if (this.state.board.lost()) {
+	    } else if (board.lost()) {
 	      gameOver = React.createElement(
-	        'div',
+	        'p',
 	        { className: 'gameover lost' },
-	        'You lost! Try again!'
+	        'You lost!'
 	      );
+	    }
+	
+	    var replayText;
+	    if (!this.state.firstTurn) {
+	      if (board.won() || board.lost()) {
+	        replayText = "Press enter to play again";
+	      } else {
+	        replayText = "Press enter to start a new game";
+	      }
 	    }
 	
 	    return React.createElement(
 	      'div',
 	      null,
 	      React.createElement(Board, { board: this.state.board, updateGame: this._updateGame }),
-	      gameOver
+	      React.createElement(
+	        'section',
+	        { className: 'messages' },
+	        gameOver,
+	        React.createElement(
+	          'p',
+	          { className: 'replay' },
+	          replayText
+	        )
+	      )
 	    );
 	  },
 	
@@ -19699,7 +19731,7 @@
 	      tile.explore();
 	    }
 	
-	    this.forceUpdate();
+	    this.setState({ firstTurn: false });
 	  }
 	});
 
@@ -19946,8 +19978,8 @@
 	    }
 	
 	    if (tile.board.lost()) {
-	      var x = Math.round((Math.random() - 0.5) * window.innerWidth);
-	      var y = Math.round((Math.random() - 0.5) * window.innerHeight);
+	      var x = Math.round((Math.random() - 0.55) * (window.innerWidth - 300));
+	      var y = Math.round((Math.random() - 0.55) * (window.innerHeight - 300));
 	      var degrees = Math.round((Math.random() - 0.5) * 1860);
 	      var seconds = Math.random();
 	

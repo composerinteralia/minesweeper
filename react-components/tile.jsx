@@ -31,8 +31,8 @@ module.exports = React.createClass({
     }
 
     if (tile.board.lost()) {
-      var x = Math.round((Math.random() - 0.5) * window.innerWidth);
-      var y = Math.round((Math.random() - 0.5) * window.innerHeight);
+      var x = Math.round((Math.random() - 0.55) * (window.innerWidth - 300));
+      var y = Math.round((Math.random() - 0.55) * (window.innerHeight - 300));
       var degrees = Math.round((Math.random() - 0.5) * 1860);
       var seconds = Math.random();
 
