@@ -19669,44 +19669,14 @@
 	  },
 	
 	  componentDidMount: function () {
-	    document.addEventListener('keypress', function (e) {
-	      if (!this.state.firstTurn && e.keyCode === 13) {
-	        this.setState({ board: new Minesweeper(10, 10), firstTurn: true });
-	      }
-	    }.bind(this));
+	    document.addEventListener('keypress', this._onBoardReset);
 	  },
 	
 	  componentWillUnmount: function () {
-	    document.removeEventListener('keypress');
+	    document.removeEventListener('keypress', this._onBoardReset);
 	  },
 	
 	  render: function () {
-	    var board = this.state.board;
-	
-	    var gameOver;
-	    if (board.won()) {
-	      gameOver = React.createElement(
-	        'p',
-	        { className: 'gameover won' },
-	        'Congratulations! You won!'
-	      );
-	    } else if (board.lost()) {
-	      gameOver = React.createElement(
-	        'p',
-	        { className: 'gameover lost' },
-	        'You lost!'
-	      );
-	    }
-	
-	    var replayText;
-	    if (!this.state.firstTurn) {
-	      if (board.won() || board.lost()) {
-	        replayText = "Press enter to play again";
-	      } else {
-	        replayText = "Press enter to start a new game";
-	      }
-	    }
-	
 	    return React.createElement(
 	      'div',
 	      null,
@@ -19714,14 +19684,50 @@
 	      React.createElement(
 	        'section',
 	        { className: 'messages' },
-	        gameOver,
+	        this._gameOverStatus(),
 	        React.createElement(
 	          'p',
 	          { className: 'replay' },
-	          replayText
+	          this._replayText()
 	        )
 	      )
 	    );
+	  },
+	
+	  _gameOverStatus: function () {
+	    var board = this.state.board;
+	
+	    if (board.won()) {
+	      return React.createElement(
+	        'p',
+	        { className: 'gameover won' },
+	        'Congratulations! You won!'
+	      );
+	    } else if (board.lost()) {
+	      return React.createElement(
+	        'p',
+	        { className: 'gameover lost' },
+	        'You lost!'
+	      );
+	    }
+	  },
+	
+	  _replayText: function () {
+	    var board = this.state.board;
+	
+	    if (!this.state.firstTurn) {
+	      if (board.won() || board.lost()) {
+	        return "Press enter to play again";
+	      } else {
+	        return "Press enter to start a new game";
+	      }
+	    }
+	  },
+	
+	  _onBoardReset: function (e) {
+	    if (!this.state.firstTurn && e.keyCode === 13) {
+	      this.setState({ board: new Minesweeper(10, 10), firstTurn: true });
+	    }
 	  },
 	
 	  _updateGame: function (tile, altKey) {
@@ -19733,6 +19739,7 @@
 	
 	    this.setState({ firstTurn: false });
 	  }
+	
 	});
 
 /***/ },
@@ -19915,8 +19922,17 @@
 	  displayName: 'exports',
 	
 	  render: function () {
+	    return React.createElement(
+	      'ul',
+	      { className: 'board' },
+	      this._tiles()
+	    );
+	  },
+	
+	  _tiles: function () {
 	    var that = this;
-	    var tiles = this.props.board.grid.map(function (row, rowIdx) {
+	
+	    return this.props.board.grid.map(function (row, rowIdx) {
 	      return React.createElement(
 	        'li',
 	        { className: 'row group', key: rowIdx },
@@ -19928,13 +19944,8 @@
 	        })
 	      );
 	    });
-	
-	    return React.createElement(
-	      'ul',
-	      { className: 'board' },
-	      tiles
-	    );
 	  }
+	
 	});
 
 /***/ },
@@ -19954,8 +19965,7 @@
 	    var tile = this.props.tile;
 	
 	    var face = "",
-	        htmlClasses = ["tile"],
-	        htmlStyle = {};
+	        htmlClasses = ["tile"];
 	
 	    if (tile.explored) {
 	      htmlClasses.push("explored");
@@ -19977,33 +19987,37 @@
 	      face = "⚑";
 	    }
 	
-	    if (tile.board.lost()) {
-	      var x = Math.round((Math.random() - 0.55) * (window.innerWidth - 300));
-	      var y = Math.round((Math.random() - 0.6) * (window.innerHeight - 300));
-	      var degrees = Math.round((Math.random() - 0.5) * 1860);
-	      var seconds = Math.random();
-	
-	      htmlStyle = {
-	        transform: "translate(" + x + "px, " + y + "px) rotate(" + degrees + "deg)",
-	        transition: "transform " + seconds + "s"
-	      };
-	    }
-	
-	    if (tile.board.won()) {
-	      htmlStyle = {
-	        WebkitAnimationName: "shake",
-	        WebkitAnimationDuration: Math.random() + "s",
-	        WebkitAnimationIterationCount: "2"
-	      };
-	    }
-	
 	    return React.createElement(
 	      "div",
-	      { style: htmlStyle,
+	      { style: this._inlineStyling(),
 	        className: htmlClasses.join(" "),
 	        onClick: this.handleClick },
 	      face
 	    );
+	  },
+	
+	  _inlineStyling: function () {
+	    var tile = this.props.tile;
+	
+	    if (tile.board.lost()) {
+	      var x = Math.round((Math.random() - 0.5) * (window.innerWidth - 300));
+	      var y = Math.round((Math.random() - 0.55) * (window.innerHeight - 200));
+	      var degrees = Math.round((Math.random() - 0.5) * 1860);
+	      var seconds = Math.random();
+	
+	      return {
+	        transform: "translate(" + x + "px, " + y + "px) rotate(" + degrees + "deg)",
+	        transition: "transform " + seconds + "s"
+	      };
+	    } else if (tile.board.won()) {
+	      return {
+	        WebkitAnimationName: "shake",
+	        WebkitAnimationDuration: Math.random() + "s",
+	        WebkitAnimationIterationCount: "2"
+	      };
+	    } else {
+	      return {};
+	    }
 	  }
 	});
 

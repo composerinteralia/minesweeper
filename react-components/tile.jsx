@@ -9,8 +9,7 @@ module.exports = React.createClass({
     var tile = this.props.tile
 
     var face = "",
-        htmlClasses = ["tile"],
-        htmlStyle = {};
+        htmlClasses = ["tile"];
 
     if (tile.explored) {
       htmlClasses.push("explored");
@@ -30,32 +29,37 @@ module.exports = React.createClass({
       face = "⚑";
     }
 
+    return(
+      <div style={ this._inlineStyling() }
+        className={ htmlClasses.join(" ") }
+        onClick={ this.handleClick }>
+        
+        { face }
+      </div>
+    );
+  },
+
+  _inlineStyling: function () {
+    var tile = this.props.tile
+
     if (tile.board.lost()) {
-      var x = Math.round((Math.random() - 0.55) * (window.innerWidth - 300));
-      var y = Math.round((Math.random() - 0.6) * (window.innerHeight - 300));
+      var x = Math.round((Math.random() - 0.5) * (window.innerWidth - 300));
+      var y = Math.round((Math.random() - 0.55) * (window.innerHeight - 200));
       var degrees = Math.round((Math.random() - 0.5) * 1860);
       var seconds = Math.random();
 
-      htmlStyle = {
+      return {
         transform: "translate(" + x + "px, " + y + "px) rotate(" + degrees + "deg)",
         transition: "transform " + seconds + "s"
       }
-    }
-
-    if (tile.board.won()) {
-      htmlStyle = {
+    } else if (tile.board.won()) {
+      return {
         WebkitAnimationName: "shake",
         WebkitAnimationDuration: Math.random() + "s",
         WebkitAnimationIterationCount: "2"
       }
+    } else {
+      return {}
     }
-
-    return(
-      <div style={htmlStyle}
-        className={ htmlClasses.join(" ") }
-        onClick={ this.handleClick }>
-        { face }
-      </div>
-    );
   }
 });
