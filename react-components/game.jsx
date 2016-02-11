@@ -44,7 +44,7 @@ module.exports = React.createClass({
     var board = this.state.board;
 
     if (!this.state.firstTurn) {
-      if (board.won() || board.lost()) {
+      if (board.over()) {
         return "Press enter to play again"
       } else {
         return "Press enter to start a new game"
@@ -59,6 +59,8 @@ module.exports = React.createClass({
   },
 
   _updateGame: function (tile, altKey) {
+    if (this.state.board.over()) return;
+
     if (altKey) {
       tile.toggleFlag();
     } else {

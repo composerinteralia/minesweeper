@@ -42,6 +42,7 @@ Board.prototype.plantBombs = function () {
 
 Board.prototype.lost = function () {
   var lost = false;
+
   this.grid.forEach(function(row) {
     row.forEach(function(tile) {
       if (tile.bombed && tile.explored) {
@@ -49,11 +50,13 @@ Board.prototype.lost = function () {
       }
     });
   });
+
   return lost;
 };
 
 Board.prototype.won = function () {
   var won = true;
+
   this.grid.forEach(function(row) {
     row.forEach(function(tile) {
       if (!tile.explored && !tile.bombed) {
@@ -61,7 +64,12 @@ Board.prototype.won = function () {
       }
     });
   });
+
   return won;
 };
+
+Board.prototype.over = function () {
+  return this.won() || this.lost();
+}
 
 module.exports = Board;

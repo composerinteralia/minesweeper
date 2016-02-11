@@ -146,6 +146,11 @@ span.bomb {
   color: red;
 }
 
+.inactive:hover {
+  background: #aaa;
+  cursor: default;
+}
+
 .bomb-count-1 {
   color: blue;
 }

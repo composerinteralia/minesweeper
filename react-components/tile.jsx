@@ -29,20 +29,24 @@ module.exports = React.createClass({
       face = "⚑";
     }
 
+    if (tile.board.over()) {
+      htmlClasses.push("inactive")
+    }
+
     return(
       <div style={ this._inlineStyling() }
         className={ htmlClasses.join(" ") }
         onClick={ this.handleClick }>
-        
+
         { face }
       </div>
     );
   },
 
   _inlineStyling: function () {
-    var tile = this.props.tile
+    var board = this.props.tile.board
 
-    if (tile.board.lost()) {
+    if (board.lost()) {
       var x = Math.round((Math.random() - 0.5) * (window.innerWidth - 300));
       var y = Math.round((Math.random() - 0.55) * (window.innerHeight - 200));
       var degrees = Math.round((Math.random() - 0.5) * 1860);
@@ -52,7 +56,7 @@ module.exports = React.createClass({
         transform: "translate(" + x + "px, " + y + "px) rotate(" + degrees + "deg)",
         transition: "transform " + seconds + "s"
       }
-    } else if (tile.board.won()) {
+    } else if (board.won()) {
       return {
         WebkitAnimationName: "shake",
         WebkitAnimationDuration: Math.random() + "s",

@@ -19716,7 +19716,7 @@
 	    var board = this.state.board;
 	
 	    if (!this.state.firstTurn) {
-	      if (board.won() || board.lost()) {
+	      if (board.over()) {
 	        return "Press enter to play again";
 	      } else {
 	        return "Press enter to start a new game";
@@ -19731,6 +19731,8 @@
 	  },
 	
 	  _updateGame: function (tile, altKey) {
+	    if (this.state.board.over()) return;
+	
 	    if (altKey) {
 	      tile.toggleFlag();
 	    } else {
@@ -19787,6 +19789,7 @@
 	
 	Board.prototype.lost = function () {
 	  var lost = false;
+	
 	  this.grid.forEach(function (row) {
 	    row.forEach(function (tile) {
 	      if (tile.bombed && tile.explored) {
@@ -19794,11 +19797,13 @@
 	      }
 	    });
 	  });
+	
 	  return lost;
 	};
 	
 	Board.prototype.won = function () {
 	  var won = true;
+	
 	  this.grid.forEach(function (row) {
 	    row.forEach(function (tile) {
 	      if (!tile.explored && !tile.bombed) {
@@ -19806,7 +19811,12 @@
 	      }
 	    });
 	  });
+	
 	  return won;
+	};
+	
+	Board.prototype.over = function () {
+	  return this.won() || this.lost();
 	};
 	
 	module.exports = Board;
@@ -19987,6 +19997,10 @@
 	      face = "⚑";
 	    }
 	
+	    if (tile.board.over()) {
+	      htmlClasses.push("inactive");
+	    }
+	
 	    return React.createElement(
 	      "div",
 	      { style: this._inlineStyling(),
@@ -19997,9 +20011,9 @@
 	  },
 	
 	  _inlineStyling: function () {
-	    var tile = this.props.tile;
+	    var board = this.props.tile.board;
 	
-	    if (tile.board.lost()) {
+	    if (board.lost()) {
 	      var x = Math.round((Math.random() - 0.5) * (window.innerWidth - 300));
 	      var y = Math.round((Math.random() - 0.55) * (window.innerHeight - 200));
 	      var degrees = Math.round((Math.random() - 0.5) * 1860);
@@ -20009,7 +20023,7 @@
 	        transform: "translate(" + x + "px, " + y + "px) rotate(" + degrees + "deg)",
 	        transition: "transform " + seconds + "s"
 	      };
-	    } else if (tile.board.won()) {
+	    } else if (board.won()) {
 	      return {
 	        WebkitAnimationName: "shake",
 	        WebkitAnimationDuration: Math.random() + "s",
