@@ -9,7 +9,8 @@ module.exports = React.createClass({
     var tile = this.props.tile
 
     var face = "",
-        htmlClasses = ["tile"];
+        htmlClasses = ["tile"],
+        htmlStyle = {};
 
     if (tile.explored) {
       htmlClasses.push("explored");
@@ -29,8 +30,24 @@ module.exports = React.createClass({
       face = "⚑";
     }
 
+    if (tile.board.lost()) {
+      var x = Math.round((Math.random() - 0.5) * window.innerWidth);
+      var y = Math.round((Math.random() - 0.5) * window.innerHeight);
+      var degrees = Math.round((Math.random() - 0.5) * 1860);
+      var seconds = Math.random();
+
+      htmlStyle = {
+        transform: "translate(" + x + "px, " + y + "px) rotate(" + degrees + "deg)",
+        transition: "transform " + seconds + "s"
+      }
+    }
+
     return(
-      <div className={ htmlClasses.join(" ") } onClick={ this.handleClick }>{ face }</div>
+      <div style={htmlStyle}
+        className={ htmlClasses.join(" ") }
+        onClick={ this.handleClick }>
+        { face }
+      </div>
     );
   }
 });

@@ -19659,7 +19659,7 @@
 
 	var React = __webpack_require__(1),
 	    Minesweeper = __webpack_require__(160),
-	    Board = __webpack_require__(161);
+	    Board = __webpack_require__(162);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -19673,13 +19673,13 @@
 	    if (this.state.board.won()) {
 	      gameOver = React.createElement(
 	        'div',
-	        { className: 'gameover' },
+	        { className: 'gameover won' },
 	        'Congratulations! You won!'
 	      );
 	    } else if (this.state.board.lost()) {
 	      gameOver = React.createElement(
 	        'div',
-	        { className: 'gameover' },
+	        { className: 'gameover lost' },
 	        'You lost! Try again!'
 	      );
 	    }
@@ -19707,7 +19707,7 @@
 /* 160 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Tile = __webpack_require__(163);
+	var Tile = __webpack_require__(161);
 	
 	var Board = function (gridSize, numBombs) {
 	  this.gridSize = gridSize;
@@ -19732,6 +19732,7 @@
 	};
 	
 	Board.prototype.plantBombs = function () {
+	  // terrible! instead, sample numBombs tiles, and plant bombs  on them!
 	  var totalPlantedBombs = 0;
 	  while (totalPlantedBombs < this.numBombs) {
 	    var row = Math.floor(Math.random() * (this.gridSize - 1));
@@ -19773,86 +19774,6 @@
 
 /***/ },
 /* 161 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1),
-	    Tile = __webpack_require__(162);
-	
-	module.exports = React.createClass({
-	  displayName: 'exports',
-	
-	  render: function () {
-	    var that = this;
-	    var tiles = this.props.board.grid.map(function (row, rowIdx) {
-	      return React.createElement(
-	        'li',
-	        { className: 'row group', key: rowIdx },
-	        row.map(function (tile, colIdx) {
-	          return React.createElement(Tile, {
-	            tile: tile,
-	            key: colIdx,
-	            updateGame: that.props.updateGame });
-	        })
-	      );
-	    });
-	
-	    return React.createElement(
-	      'ul',
-	      { className: 'board' },
-	      tiles
-	    );
-	  }
-	});
-
-/***/ },
-/* 162 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	
-	module.exports = React.createClass({
-	  displayName: "exports",
-	
-	  handleClick: function (e) {
-	    this.props.updateGame(this.props.tile, e.altKey);
-	  },
-	
-	  render: function () {
-	    var tile = this.props.tile;
-	
-	    var face = "",
-	        htmlClasses = ["tile"];
-	
-	    if (tile.explored) {
-	      htmlClasses.push("explored");
-	
-	      if (tile.bombed) {
-	        htmlClasses.push("bombed");
-	        face = React.createElement(
-	          "span",
-	          { className: "bomb" },
-	          "💣"
-	        );
-	      } else {
-	        var count = tile.adjacentBombCount();
-	        htmlClasses.push("bomb-count-" + count);
-	        face = count || "";
-	      }
-	    } else if (tile.flagged) {
-	      htmlClasses.push("flagged");
-	      face = "⚑";
-	    }
-	
-	    return React.createElement(
-	      "div",
-	      { className: htmlClasses.join(" "), onClick: this.handleClick },
-	      face
-	    );
-	  }
-	});
-
-/***/ },
-/* 163 */
 /***/ function(module, exports) {
 
 	var Tile = function (board, pos) {
@@ -19950,6 +19871,101 @@
 	};
 	
 	module.exports = Tile;
+
+/***/ },
+/* 162 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    Tile = __webpack_require__(163);
+	
+	module.exports = React.createClass({
+	  displayName: 'exports',
+	
+	  render: function () {
+	    var that = this;
+	    var tiles = this.props.board.grid.map(function (row, rowIdx) {
+	      return React.createElement(
+	        'li',
+	        { className: 'row group', key: rowIdx },
+	        row.map(function (tile, colIdx) {
+	          return React.createElement(Tile, {
+	            tile: tile,
+	            key: colIdx,
+	            updateGame: that.props.updateGame });
+	        })
+	      );
+	    });
+	
+	    return React.createElement(
+	      'ul',
+	      { className: 'board' },
+	      tiles
+	    );
+	  }
+	});
+
+/***/ },
+/* 163 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	module.exports = React.createClass({
+	  displayName: "exports",
+	
+	  handleClick: function (e) {
+	    this.props.updateGame(this.props.tile, e.altKey);
+	  },
+	
+	  render: function () {
+	    var tile = this.props.tile;
+	
+	    var face = "",
+	        htmlClasses = ["tile"],
+	        htmlStyle = {};
+	
+	    if (tile.explored) {
+	      htmlClasses.push("explored");
+	
+	      if (tile.bombed) {
+	        htmlClasses.push("bombed");
+	        face = React.createElement(
+	          "span",
+	          { className: "bomb" },
+	          "💣"
+	        );
+	      } else {
+	        var count = tile.adjacentBombCount();
+	        htmlClasses.push("bomb-count-" + count);
+	        face = count || "";
+	      }
+	    } else if (tile.flagged) {
+	      htmlClasses.push("flagged");
+	      face = "⚑";
+	    }
+	
+	    if (tile.board.lost()) {
+	      var x = Math.round((Math.random() - 0.5) * window.innerWidth);
+	      var y = Math.round((Math.random() - 0.5) * window.innerHeight);
+	      var degrees = Math.round((Math.random() - 0.5) * 1860);
+	      var seconds = Math.random();
+	
+	      htmlStyle = {
+	        transform: "translate(" + x + "px, " + y + "px) rotate(" + degrees + "deg)",
+	        transition: "transform " + seconds + "s"
+	      };
+	    }
+	
+	    return React.createElement(
+	      "div",
+	      { style: htmlStyle,
+	        className: htmlClasses.join(" "),
+	        onClick: this.handleClick },
+	      face
+	    );
+	  }
+	});
 
 /***/ }
 /******/ ]);

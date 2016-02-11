@@ -10,9 +10,9 @@ module.exports = React.createClass({
   render: function () {
     var gameOver;
     if (this.state.board.won()) {
-      gameOver = <div className="gameover">Congratulations! You won!</div>;
+      gameOver = <div className="gameover won">Congratulations! You won!</div>;
     } else if (this.state.board.lost()) {
-      gameOver = <div className="gameover">You lost! Try again!</div>;
+      gameOver = <div className="gameover lost">You lost! Try again!</div>;
     }
 
     return(

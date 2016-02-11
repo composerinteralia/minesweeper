@@ -26,6 +26,7 @@ Board.prototype.onBoard = function (pos) {
 };
 
 Board.prototype.plantBombs = function () {
+  // terrible! instead, sample numBombs tiles, and plant bombs  on them!
   var totalPlantedBombs = 0;
   while (totalPlantedBombs < this.numBombs) {
     var row = Math.floor(Math.random() * (this.gridSize - 1));

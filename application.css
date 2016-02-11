@@ -22,7 +22,8 @@ ul {
 }
 
 body {
-  background: #eee;
+  background: url('background.jpg') no-repeat;
+  background-size: cover;
   font-family: 'Lora';
 }
 
@@ -49,6 +50,9 @@ p {
   margin: auto;
   height: 280px;
   width: 280px;
+  background: url('bomb.jpg') no-repeat;
+  background-position: center;
+  background-size: cover;
   border: 5px solid #bbb;
   border-style: ridge;
 }
@@ -116,4 +120,19 @@ span.bomb {
 
 .bomb-count-8 {
   color: grey;
+}
+
+.gameover {
+  position: relative;
+  z-index: 50;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.lost {
+  color: red;
+}
+
+.won {
+  color: green;
 }
