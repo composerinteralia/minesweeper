@@ -23,6 +23,17 @@ var Board = function (options) {
   this.plantBombs();
 };
 
+Board.prototype.exchange = function (tile) {
+  tile.removeBomb();
+  this.unbombedTiles().sample(1)[0].plantBomb()
+}
+
+Board.prototype.forEachTile = function (fn) {
+  this.grid.forEach(function (row) {
+    row.forEach(fn)
+  })
+}
+
 Board.prototype.generateGrid = function () {
   for (var i = 0; i < this.height; i++) {
 
@@ -36,12 +47,6 @@ Board.prototype.generateGrid = function () {
     this.grid.push(row);
   }
 };
-
-Board.prototype.forEachTile = function (fn) {
-  this.grid.forEach(function (row) {
-    row.forEach(fn)
-  })
-}
 
 Board.prototype.plantBombs = function () {
   this.unluckyTiles().forEach(function (tile) {
@@ -71,6 +76,18 @@ Board.prototype.onBoard = function (pos) {
 Board.prototype.over = function () {
   return this.won() || this.lost();
 };
+
+Board.prototype.unbombedTiles = function () {
+  var unbombedTiles = [];
+
+  this.forEachTile(function (tile) {
+    if (!tile.bombed) {
+      unbombedTiles.push(tile);
+    }
+  })
+
+  return unbombedTiles;
+}
 
 Board.prototype.unluckyTiles = function () {
   var allTiles = [];

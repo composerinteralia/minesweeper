@@ -61,7 +61,13 @@ module.exports = React.createClass({
   },
 
   _updateGame: function (tile, altKey) {
-    if (this.state.board.over()) return;
+    var board = this.state.board
+
+    if (board.over()) return;
+
+    if (this.state.firstTurn && tile.bombed) {
+      board.exchange(tile)
+    }
 
     if (altKey) {
       tile.toggleFlag();

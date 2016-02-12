@@ -85,6 +85,10 @@ Tile.prototype.plantBomb = function () {
   this.bombed = true;
 };
 
+Tile.prototype.removeBomb = function () {
+  this.bombed = false;
+}
+
 Tile.prototype.toggleFlag = function () {
   if (!this.explored) {
     this.flagged = !this.flagged;

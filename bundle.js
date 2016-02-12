@@ -19733,7 +19733,13 @@
 	  },
 	
 	  _updateGame: function (tile, altKey) {
-	    if (this.state.board.over()) return;
+	    var board = this.state.board;
+	
+	    if (board.over()) return;
+	
+	    if (this.state.firstTurn && tile.bombed) {
+	      board.exchange(tile);
+	    }
 	
 	    if (altKey) {
 	      tile.toggleFlag();
@@ -19775,6 +19781,17 @@
 	  this.plantBombs();
 	};
 	
+	Board.prototype.exchange = function (tile) {
+	  tile.removeBomb();
+	  this.unbombedTiles().sample(1)[0].plantBomb();
+	};
+	
+	Board.prototype.forEachTile = function (fn) {
+	  this.grid.forEach(function (row) {
+	    row.forEach(fn);
+	  });
+	};
+	
 	Board.prototype.generateGrid = function () {
 	  for (var i = 0; i < this.height; i++) {
 	
@@ -19787,12 +19804,6 @@
 	
 	    this.grid.push(row);
 	  }
-	};
-	
-	Board.prototype.forEachTile = function (fn) {
-	  this.grid.forEach(function (row) {
-	    row.forEach(fn);
-	  });
 	};
 	
 	Board.prototype.plantBombs = function () {
@@ -19819,6 +19830,18 @@
 	
 	Board.prototype.over = function () {
 	  return this.won() || this.lost();
+	};
+	
+	Board.prototype.unbombedTiles = function () {
+	  var unbombedTiles = [];
+	
+	  this.forEachTile(function (tile) {
+	    if (!tile.bombed) {
+	      unbombedTiles.push(tile);
+	    }
+	  });
+	
+	  return unbombedTiles;
 	};
 	
 	Board.prototype.unluckyTiles = function () {
@@ -20046,6 +20069,10 @@
 	
 	Tile.prototype.plantBomb = function () {
 	  this.bombed = true;
+	};
+	
+	Tile.prototype.removeBomb = function () {
+	  this.bombed = false;
 	};
 	
 	Tile.prototype.toggleFlag = function () {
