@@ -4,7 +4,8 @@ var React = require('react'),
 
 module.exports = React.createClass({
   getInitialState: function () {
-    return { board: new Minesweeper(10, 10), firstTurn: true };
+    var board = new Minesweeper({ height: 10, width: 10, numBombs: 10 })
+    return { board: board, firstTurn: true };
   },
 
   componentDidMount: function () {
@@ -54,7 +55,8 @@ module.exports = React.createClass({
 
   _onBoardReset: function (e) {
     if (!this.state.firstTurn && e.keyCode === 13) {
-      this.setState({ board: new Minesweeper(10, 10), firstTurn: true })
+      var board = new Minesweeper({ height: 10, width: 10, numBombs: 10 })
+      this.setState({ board: board, firstTurn: true })
     }
   },
 

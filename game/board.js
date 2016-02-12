@@ -1,43 +1,67 @@
 var Tile = require('./tile');
 
-var Board = function (gridSize, numBombs) {
-  this.gridSize = gridSize;
+Array.prototype.sample = function (size) {
+  var els = this.slice(),
+      result = [],
+      index;
+
+  while (result.length < size) {
+    index = Math.floor(Math.random() * els.length);
+    result.push(els[index]);
+    els.splice(index, 1);
+  }
+
+  return result
+};
+
+var Board = function (options) {
+  this.height = options.height;
+  this.width = options.width;
+  this.numBombs = options.numBombs;
   this.grid = [];
-  this.numBombs = numBombs;
-  this.generateBoard();
+  this.generateGrid();
   this.plantBombs();
 };
 
-Board.prototype.generateBoard = function () {
-  for (var i = 0; i < this.gridSize; i++) {
-    this.grid.push([]);
-    for (var j = 0; j < this.gridSize; j++) {
+Board.prototype.generateGrid = function () {
+  for (var i = 0; i < this.height; i++) {
+
+    var row = []
+
+    for (var j = 0; j < this.width; j++) {
       var tile = new Tile(this, [i, j]);
-      this.grid[i].push(tile);
+      row.push(tile);
     }
+
+    this.grid.push(row);
   }
 };
 
 Board.prototype.onBoard = function (pos) {
   return (
-    pos[0] >= 0 && pos[0] < this.gridSize &&
-      pos[1] >= 0 && pos[1] < this.gridSize
+    pos[0] >= 0 && pos[0] < this.height &&
+      pos[1] >= 0 && pos[1] < this.width
   );
 };
 
-Board.prototype.plantBombs = function () {
-  // terrible! instead, sample numBombs tiles, and plant bombs  on them!
-  var totalPlantedBombs = 0;
-  while (totalPlantedBombs < this.numBombs) {
-    var row = Math.floor(Math.random() * (this.gridSize - 1));
-    var col = Math.floor(Math.random() * (this.gridSize - 1));
+Board.prototype.tiles = function () {
+  var tiles = [];
 
-    tile = this.grid[row][col];
-    if (!tile.bombed) {
-      tile.plantBomb();
-      totalPlantedBombs++;
-    }
-  }
+  this.grid.forEach(function (row) {
+    row.forEach(function (tile) {
+      tiles.push(tile);
+    })
+  })
+
+  return tiles;
+};
+
+Board.prototype.plantBombs = function () {
+  var vulnerableTiles = this.tiles().sample(this.numBombs)
+
+  vulnerableTiles.forEach(function (tile) {
+    tile.plantBomb();
+  })
 };
 
 Board.prototype.lost = function () {
@@ -70,6 +94,6 @@ Board.prototype.won = function () {
 
 Board.prototype.over = function () {
   return this.won() || this.lost();
-}
+};
 
 module.exports = Board;

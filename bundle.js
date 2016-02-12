@@ -19659,13 +19659,14 @@
 
 	var React = __webpack_require__(1),
 	    Minesweeper = __webpack_require__(160),
-	    Board = __webpack_require__(162);
+	    Board = __webpack_require__(161);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
 	
 	  getInitialState: function () {
-	    return { board: new Minesweeper(10, 10), firstTurn: true };
+	    var board = new Minesweeper({ height: 10, width: 10, numBombs: 10 });
+	    return { board: board, firstTurn: true };
 	  },
 	
 	  componentDidMount: function () {
@@ -19726,7 +19727,8 @@
 	
 	  _onBoardReset: function (e) {
 	    if (!this.state.firstTurn && e.keyCode === 13) {
-	      this.setState({ board: new Minesweeper(10, 10), firstTurn: true });
+	      var board = new Minesweeper({ height: 10, width: 10, numBombs: 10 });
+	      this.setState({ board: board, firstTurn: true });
 	    }
 	  },
 	
@@ -19748,43 +19750,67 @@
 /* 160 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Tile = __webpack_require__(161);
+	var Tile = __webpack_require__(163);
 	
-	var Board = function (gridSize, numBombs) {
-	  this.gridSize = gridSize;
+	Array.prototype.sample = function (size) {
+	  var els = this.slice(),
+	      result = [],
+	      index;
+	
+	  while (result.length < size) {
+	    index = Math.floor(Math.random() * els.length);
+	    result.push(els[index]);
+	    els.splice(index, 1);
+	  }
+	
+	  return result;
+	};
+	
+	var Board = function (options) {
+	  this.height = options.height;
+	  this.width = options.width;
+	  this.numBombs = options.numBombs;
 	  this.grid = [];
-	  this.numBombs = numBombs;
-	  this.generateBoard();
+	  this.generateGrid();
 	  this.plantBombs();
 	};
 	
-	Board.prototype.generateBoard = function () {
-	  for (var i = 0; i < this.gridSize; i++) {
-	    this.grid.push([]);
-	    for (var j = 0; j < this.gridSize; j++) {
+	Board.prototype.generateGrid = function () {
+	  for (var i = 0; i < this.height; i++) {
+	
+	    var row = [];
+	
+	    for (var j = 0; j < this.width; j++) {
 	      var tile = new Tile(this, [i, j]);
-	      this.grid[i].push(tile);
+	      row.push(tile);
 	    }
+	
+	    this.grid.push(row);
 	  }
 	};
 	
 	Board.prototype.onBoard = function (pos) {
-	  return pos[0] >= 0 && pos[0] < this.gridSize && pos[1] >= 0 && pos[1] < this.gridSize;
+	  return pos[0] >= 0 && pos[0] < this.height && pos[1] >= 0 && pos[1] < this.width;
+	};
+	
+	Board.prototype.tiles = function () {
+	  var tiles = [];
+	
+	  this.grid.forEach(function (row) {
+	    row.forEach(function (tile) {
+	      tiles.push(tile);
+	    });
+	  });
+	
+	  return tiles;
 	};
 	
 	Board.prototype.plantBombs = function () {
-	  // terrible! instead, sample numBombs tiles, and plant bombs  on them!
-	  var totalPlantedBombs = 0;
-	  while (totalPlantedBombs < this.numBombs) {
-	    var row = Math.floor(Math.random() * (this.gridSize - 1));
-	    var col = Math.floor(Math.random() * (this.gridSize - 1));
+	  var vulnerableTiles = this.tiles().sample(this.numBombs);
 	
-	    tile = this.grid[row][col];
-	    if (!tile.bombed) {
-	      tile.plantBomb();
-	      totalPlantedBombs++;
-	    }
-	  }
+	  vulnerableTiles.forEach(function (tile) {
+	    tile.plantBomb();
+	  });
 	};
 	
 	Board.prototype.lost = function () {
@@ -19823,6 +19849,120 @@
 
 /***/ },
 /* 161 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    Tile = __webpack_require__(162);
+	
+	module.exports = React.createClass({
+	  displayName: 'exports',
+	
+	  render: function () {
+	    return React.createElement(
+	      'ul',
+	      { className: 'board' },
+	      this._tiles()
+	    );
+	  },
+	
+	  _tiles: function () {
+	    var that = this;
+	
+	    return this.props.board.grid.map(function (row, rowIdx) {
+	      return React.createElement(
+	        'li',
+	        { className: 'row group', key: rowIdx },
+	        row.map(function (tile, colIdx) {
+	          return React.createElement(Tile, {
+	            tile: tile,
+	            key: colIdx,
+	            updateGame: that.props.updateGame });
+	        })
+	      );
+	    });
+	  }
+	
+	});
+
+/***/ },
+/* 162 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	module.exports = React.createClass({
+	  displayName: "exports",
+	
+	  handleClick: function (e) {
+	    this.props.updateGame(this.props.tile, e.altKey);
+	  },
+	
+	  render: function () {
+	    var tile = this.props.tile;
+	
+	    var face = "",
+	        htmlClasses = ["tile"];
+	
+	    if (tile.explored) {
+	      htmlClasses.push("explored");
+	
+	      if (tile.bombed) {
+	        htmlClasses.push("bombed");
+	        face = React.createElement(
+	          "span",
+	          { className: "bomb" },
+	          "💣"
+	        );
+	      } else {
+	        var count = tile.adjacentBombCount();
+	        htmlClasses.push("bomb-count-" + count);
+	        face = count || "";
+	      }
+	    } else if (tile.flagged) {
+	      htmlClasses.push("flagged");
+	      face = "⚑";
+	    }
+	
+	    if (tile.board.over()) {
+	      htmlClasses.push("inactive");
+	    }
+	
+	    return React.createElement(
+	      "div",
+	      { style: this._inlineStyling(),
+	        className: htmlClasses.join(" "),
+	        onClick: this.handleClick },
+	      face
+	    );
+	  },
+	
+	  _inlineStyling: function () {
+	    var board = this.props.tile.board;
+	
+	    if (board.lost()) {
+	      var x = Math.round((Math.random() - 0.5) * (window.innerWidth - 300));
+	      var y = Math.round((Math.random() - 0.55) * (window.innerHeight - 200));
+	      var degrees = Math.round((Math.random() - 0.5) * 1860);
+	      var seconds = Math.random();
+	
+	      return {
+	        transform: "translate(" + x + "px, " + y + "px) rotate(" + degrees + "deg)",
+	        transition: "transform " + seconds + "s"
+	      };
+	    } else if (board.won()) {
+	      return {
+	        WebkitAnimationName: "shake",
+	        WebkitAnimationDuration: Math.random() + "s",
+	        WebkitAnimationIterationCount: "2"
+	      };
+	    } else {
+	      return {};
+	    }
+	  }
+	});
+
+/***/ },
+/* 163 */
 /***/ function(module, exports) {
 
 	var Tile = function (board, pos) {
@@ -19920,120 +20060,6 @@
 	};
 	
 	module.exports = Tile;
-
-/***/ },
-/* 162 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1),
-	    Tile = __webpack_require__(163);
-	
-	module.exports = React.createClass({
-	  displayName: 'exports',
-	
-	  render: function () {
-	    return React.createElement(
-	      'ul',
-	      { className: 'board' },
-	      this._tiles()
-	    );
-	  },
-	
-	  _tiles: function () {
-	    var that = this;
-	
-	    return this.props.board.grid.map(function (row, rowIdx) {
-	      return React.createElement(
-	        'li',
-	        { className: 'row group', key: rowIdx },
-	        row.map(function (tile, colIdx) {
-	          return React.createElement(Tile, {
-	            tile: tile,
-	            key: colIdx,
-	            updateGame: that.props.updateGame });
-	        })
-	      );
-	    });
-	  }
-	
-	});
-
-/***/ },
-/* 163 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	
-	module.exports = React.createClass({
-	  displayName: "exports",
-	
-	  handleClick: function (e) {
-	    this.props.updateGame(this.props.tile, e.altKey);
-	  },
-	
-	  render: function () {
-	    var tile = this.props.tile;
-	
-	    var face = "",
-	        htmlClasses = ["tile"];
-	
-	    if (tile.explored) {
-	      htmlClasses.push("explored");
-	
-	      if (tile.bombed) {
-	        htmlClasses.push("bombed");
-	        face = React.createElement(
-	          "span",
-	          { className: "bomb" },
-	          "💣"
-	        );
-	      } else {
-	        var count = tile.adjacentBombCount();
-	        htmlClasses.push("bomb-count-" + count);
-	        face = count || "";
-	      }
-	    } else if (tile.flagged) {
-	      htmlClasses.push("flagged");
-	      face = "⚑";
-	    }
-	
-	    if (tile.board.over()) {
-	      htmlClasses.push("inactive");
-	    }
-	
-	    return React.createElement(
-	      "div",
-	      { style: this._inlineStyling(),
-	        className: htmlClasses.join(" "),
-	        onClick: this.handleClick },
-	      face
-	    );
-	  },
-	
-	  _inlineStyling: function () {
-	    var board = this.props.tile.board;
-	
-	    if (board.lost()) {
-	      var x = Math.round((Math.random() - 0.5) * (window.innerWidth - 300));
-	      var y = Math.round((Math.random() - 0.55) * (window.innerHeight - 200));
-	      var degrees = Math.round((Math.random() - 0.5) * 1860);
-	      var seconds = Math.random();
-	
-	      return {
-	        transform: "translate(" + x + "px, " + y + "px) rotate(" + degrees + "deg)",
-	        transition: "transform " + seconds + "s"
-	      };
-	    } else if (board.won()) {
-	      return {
-	        WebkitAnimationName: "shake",
-	        WebkitAnimationDuration: Math.random() + "s",
-	        WebkitAnimationIterationCount: "2"
-	      };
-	    } else {
-	      return {};
-	    }
-	  }
-	});
 
 /***/ }
 /******/ ]);
