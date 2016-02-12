@@ -37,29 +37,14 @@ Board.prototype.generateGrid = function () {
   }
 };
 
-Board.prototype.onBoard = function (pos) {
-  return (
-    pos[0] >= 0 && pos[0] < this.height &&
-      pos[1] >= 0 && pos[1] < this.width
-  );
-};
-
-Board.prototype.tiles = function () {
-  var tiles = [];
-
+Board.prototype.forEachTile = function (fn) {
   this.grid.forEach(function (row) {
-    row.forEach(function (tile) {
-      tiles.push(tile);
-    })
+    row.forEach(fn)
   })
-
-  return tiles;
-};
+}
 
 Board.prototype.plantBombs = function () {
-  var vulnerableTiles = this.tiles().sample(this.numBombs)
-
-  vulnerableTiles.forEach(function (tile) {
+  this.unluckyTiles().forEach(function (tile) {
     tile.plantBomb();
   })
 };
@@ -67,33 +52,46 @@ Board.prototype.plantBombs = function () {
 Board.prototype.lost = function () {
   var lost = false;
 
-  this.grid.forEach(function(row) {
-    row.forEach(function(tile) {
-      if (tile.bombed && tile.explored) {
-        lost = true;
-      }
-    });
+  this.forEachTile(function(tile) {
+    if (tile.bombed && tile.explored) {
+      lost = true;
+    }
   });
 
   return lost;
 };
 
-Board.prototype.won = function () {
-  var won = true;
-
-  this.grid.forEach(function(row) {
-    row.forEach(function(tile) {
-      if (!tile.explored && !tile.bombed) {
-        won = false;
-      }
-    });
-  });
-
-  return won;
+Board.prototype.onBoard = function (pos) {
+  return (
+    pos[0] >= 0 && pos[0] < this.height &&
+      pos[1] >= 0 && pos[1] < this.width
+  );
 };
 
 Board.prototype.over = function () {
   return this.won() || this.lost();
+};
+
+Board.prototype.unluckyTiles = function () {
+  var allTiles = [];
+
+  this.forEachTile(function (tile) {
+      allTiles.push(tile);
+  })
+
+  return allTiles.sample(this.numBombs);
+};
+
+Board.prototype.won = function () {
+  var won = true;
+
+  this.forEachTile(function(tile) {
+    if (!tile.explored && !tile.bombed) {
+      won = false;
+    }
+  });
+
+  return won;
 };
 
 module.exports = Board;
