@@ -60,7 +60,6 @@ module.exports = React.createClass({
   },
 
   _onBoardReset: function (e) {
-    clearInterval(this.timer)
     if (!this.state.firstTurn && e.keyCode === 13) {
       clearInterval(this.timer)
 

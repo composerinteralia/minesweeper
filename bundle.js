@@ -19731,7 +19731,6 @@
 	  },
 	
 	  _onBoardReset: function (e) {
-	    clearInterval(this.timer);
 	    if (!this.state.firstTurn && e.keyCode === 13) {
 	      clearInterval(this.timer);
 	
@@ -19929,8 +19928,8 @@
 	  return flagCount;
 	};
 	
-	Tile.prototype.allBombsFlagged = function () {
-	  return this.adjacentBombCount() === this.adjacentFlagCount();
+	Tile.prototype.explorable = function () {
+	  return !this.bombed && (this.adjacentBombCount() === 0 || this.adjacentBombCount() === this.adjacentFlagCount());
 	};
 	
 	Tile.prototype.explore = function () {
@@ -19938,7 +19937,7 @@
 	
 	  this.explored = true;
 	
-	  if (!this.bombed && this.allBombsFlagged()) {
+	  if (this.explorable()) {
 	    this.neighbors().forEach(function (tile) {
 	      if (!tile.explored) {
 	        tile.explore();
@@ -20037,7 +20036,11 @@
 	  displayName: "exports",
 	
 	  handleClick: function (e) {
-	    this.props.updateGame(this.props.tile, e.altKey);
+	    e.preventDefault();
+	
+	    var altKey = e.altKey || e.button === 2;
+	
+	    this.props.updateGame(this.props.tile, altKey);
 	  },
 	
 	  render: function () {
@@ -20074,7 +20077,10 @@
 	      "div",
 	      { style: this._inlineStyling(),
 	        className: htmlClasses.join(" "),
-	        onClick: this.handleClick },
+	        onMouseDown: this.handleClick,
+	        onContextMenu: function (e) {
+	          e.preventDefault();
+	        } },
 	      face
 	    );
 	  },

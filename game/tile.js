@@ -39,8 +39,12 @@ Tile.prototype.adjacentFlagCount = function() {
   return flagCount;
 }
 
-Tile.prototype.allBombsFlagged = function () {
-  return this.adjacentBombCount() === this.adjacentFlagCount();
+Tile.prototype.explorable = function () {
+  return (
+    !this.bombed &&
+    (this.adjacentBombCount() === 0 ||
+    this.adjacentBombCount() === this.adjacentFlagCount())
+  );
 }
 
 Tile.prototype.explore = function () {
@@ -48,7 +52,7 @@ Tile.prototype.explore = function () {
 
   this.explored = true;
 
-  if (!this.bombed && this.allBombsFlagged()) {
+  if (this.explorable()) {
     this.neighbors().forEach(function(tile) {
       if (!tile.explored) {
         tile.explore();

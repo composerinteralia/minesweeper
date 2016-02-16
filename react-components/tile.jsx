@@ -2,7 +2,11 @@ var React = require('react');
 
 module.exports = React.createClass({
   handleClick: function (e) {
-    this.props.updateGame(this.props.tile, e.altKey);
+    e.preventDefault();
+
+    var altKey = e.altKey || (e.button === 2)
+
+    this.props.updateGame(this.props.tile, altKey);
   },
 
   render: function () {
@@ -36,8 +40,8 @@ module.exports = React.createClass({
     return(
       <div style={ this._inlineStyling() }
         className={ htmlClasses.join(" ") }
-        onClick={ this.handleClick }>
-
+        onMouseDown={ this.handleClick }
+        onContextMenu={ function (e) { e.preventDefault() } }>
         { face }
       </div>
     );
