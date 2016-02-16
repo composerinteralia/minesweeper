@@ -19659,14 +19659,15 @@
 
 	var React = __webpack_require__(1),
 	    Minesweeper = __webpack_require__(160),
-	    Board = __webpack_require__(161);
+	    Board = __webpack_require__(162),
+	    Timer = __webpack_require__(164);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
 	
 	  getInitialState: function () {
 	    var board = new Minesweeper({ height: 10, width: 10, numBombs: 10 });
-	    return { board: board, firstTurn: true };
+	    return { board: board, firstTurn: true, time: 0 };
 	  },
 	
 	  componentDidMount: function () {
@@ -19675,12 +19676,14 @@
 	
 	  componentWillUnmount: function () {
 	    document.removeEventListener('keypress', this._onBoardReset);
+	    clearInterval(this.timer);
 	  },
 	
 	  render: function () {
 	    return React.createElement(
 	      'div',
 	      null,
+	      React.createElement(Timer, { time: this.state.time }),
 	      React.createElement(Board, { board: this.state.board, updateGame: this._updateGame }),
 	      React.createElement(
 	        'section',
@@ -19702,7 +19705,9 @@
 	      return React.createElement(
 	        'p',
 	        { className: 'gameover won' },
-	        'Congratulations! You won!'
+	        'Congratulations! You won in ',
+	        this.state.time,
+	        ' seconds'
 	      );
 	    } else if (board.lost()) {
 	      return React.createElement(
@@ -19726,9 +19731,12 @@
 	  },
 	
 	  _onBoardReset: function (e) {
+	    clearInterval(this.timer);
 	    if (!this.state.firstTurn && e.keyCode === 13) {
+	      clearInterval(this.timer);
+	
 	      var board = new Minesweeper({ height: 10, width: 10, numBombs: 10 });
-	      this.setState({ board: board, firstTurn: true });
+	      this.setState({ board: board, firstTurn: true, time: 0 });
 	    }
 	  },
 	
@@ -19737,14 +19745,24 @@
 	
 	    if (board.over()) return;
 	
-	    if (this.state.firstTurn && tile.bombed) {
-	      board.exchange(tile);
+	    if (this.state.firstTurn) {
+	      this.timer = setInterval(function () {
+	        this.setState({ time: this.state.time + 1 });
+	      }.bind(this), 1000);
+	
+	      if (tile.bombed) {
+	        board.exchange(tile);
+	      }
 	    }
 	
 	    if (altKey) {
 	      tile.toggleFlag();
 	    } else {
 	      tile.explore();
+	    }
+	
+	    if (board.over()) {
+	      clearInterval(this.timer);
 	    }
 	
 	    this.setState({ firstTurn: false });
@@ -19756,7 +19774,7 @@
 /* 160 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Tile = __webpack_require__(163);
+	var Tile = __webpack_require__(161);
 	
 	Array.prototype.sample = function (size) {
 	  var els = this.slice(),
@@ -19870,120 +19888,6 @@
 
 /***/ },
 /* 161 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1),
-	    Tile = __webpack_require__(162);
-	
-	module.exports = React.createClass({
-	  displayName: 'exports',
-	
-	  render: function () {
-	    return React.createElement(
-	      'ul',
-	      { className: 'board' },
-	      this._tiles()
-	    );
-	  },
-	
-	  _tiles: function () {
-	    var that = this;
-	
-	    return this.props.board.grid.map(function (row, rowIdx) {
-	      return React.createElement(
-	        'li',
-	        { className: 'row group', key: rowIdx },
-	        row.map(function (tile, colIdx) {
-	          return React.createElement(Tile, {
-	            tile: tile,
-	            key: colIdx,
-	            updateGame: that.props.updateGame });
-	        })
-	      );
-	    });
-	  }
-	
-	});
-
-/***/ },
-/* 162 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	
-	module.exports = React.createClass({
-	  displayName: "exports",
-	
-	  handleClick: function (e) {
-	    this.props.updateGame(this.props.tile, e.altKey);
-	  },
-	
-	  render: function () {
-	    var tile = this.props.tile;
-	
-	    var face = "",
-	        htmlClasses = ["tile"];
-	
-	    if (tile.explored) {
-	      htmlClasses.push("explored");
-	
-	      if (tile.bombed) {
-	        htmlClasses.push("bombed");
-	        face = React.createElement(
-	          "span",
-	          { className: "bomb" },
-	          "💣"
-	        );
-	      } else {
-	        var count = tile.adjacentBombCount();
-	        htmlClasses.push("bomb-count-" + count);
-	        face = count || "";
-	      }
-	    } else if (tile.flagged) {
-	      htmlClasses.push("flagged");
-	      face = "⚑";
-	    }
-	
-	    if (tile.board.over()) {
-	      htmlClasses.push("inactive");
-	    }
-	
-	    return React.createElement(
-	      "div",
-	      { style: this._inlineStyling(),
-	        className: htmlClasses.join(" "),
-	        onClick: this.handleClick },
-	      face
-	    );
-	  },
-	
-	  _inlineStyling: function () {
-	    var board = this.props.tile.board;
-	
-	    if (board.lost()) {
-	      var x = Math.round((Math.random() - 0.5) * (window.innerWidth - 300));
-	      var y = Math.round((Math.random() - 0.55) * (window.innerHeight - 200));
-	      var degrees = Math.round((Math.random() - 0.5) * 1860);
-	      var seconds = Math.random();
-	
-	      return {
-	        transform: "translate(" + x + "px, " + y + "px) rotate(" + degrees + "deg)",
-	        transition: "transform " + seconds + "s"
-	      };
-	    } else if (board.won()) {
-	      return {
-	        WebkitAnimationName: "shake",
-	        WebkitAnimationDuration: Math.random() + "s",
-	        WebkitAnimationIterationCount: "2"
-	      };
-	    } else {
-	      return {};
-	    }
-	  }
-	});
-
-/***/ },
-/* 163 */
 /***/ function(module, exports) {
 
 	var Tile = function (board, pos) {
@@ -20085,6 +19989,157 @@
 	};
 	
 	module.exports = Tile;
+
+/***/ },
+/* 162 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    Tile = __webpack_require__(163);
+	
+	module.exports = React.createClass({
+	  displayName: 'exports',
+	
+	  render: function () {
+	    return React.createElement(
+	      'ul',
+	      { className: 'board' },
+	      this._tiles()
+	    );
+	  },
+	
+	  _tiles: function () {
+	    var that = this;
+	
+	    return this.props.board.grid.map(function (row, rowIdx) {
+	      return React.createElement(
+	        'li',
+	        { className: 'row group', key: rowIdx },
+	        row.map(function (tile, colIdx) {
+	          return React.createElement(Tile, {
+	            tile: tile,
+	            key: colIdx,
+	            updateGame: that.props.updateGame });
+	        })
+	      );
+	    });
+	  }
+	
+	});
+
+/***/ },
+/* 163 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	module.exports = React.createClass({
+	  displayName: "exports",
+	
+	  handleClick: function (e) {
+	    this.props.updateGame(this.props.tile, e.altKey);
+	  },
+	
+	  render: function () {
+	    var tile = this.props.tile;
+	
+	    var face = "",
+	        htmlClasses = ["tile"];
+	
+	    if (tile.explored) {
+	      htmlClasses.push("explored");
+	
+	      if (tile.bombed) {
+	        htmlClasses.push("bombed");
+	        face = React.createElement(
+	          "span",
+	          { className: "bomb" },
+	          "💣"
+	        );
+	      } else {
+	        var count = tile.adjacentBombCount();
+	        htmlClasses.push("bomb-count-" + count);
+	        face = count || "";
+	      }
+	    } else if (tile.flagged) {
+	      htmlClasses.push("flagged");
+	      face = "⚑";
+	    }
+	
+	    if (tile.board.over()) {
+	      htmlClasses.push("inactive");
+	    }
+	
+	    return React.createElement(
+	      "div",
+	      { style: this._inlineStyling(),
+	        className: htmlClasses.join(" "),
+	        onClick: this.handleClick },
+	      face
+	    );
+	  },
+	
+	  _inlineStyling: function () {
+	    var board = this.props.tile.board;
+	
+	    if (board.lost()) {
+	      var x = Math.round((Math.random() - 0.5) * (window.innerWidth - 300));
+	      var y = Math.round((Math.random() - 0.55) * (window.innerHeight - 200));
+	      var degrees = Math.round((Math.random() - 0.5) * 1860);
+	      var seconds = Math.random();
+	
+	      return {
+	        transform: "translate(" + x + "px, " + y + "px) rotate(" + degrees + "deg)",
+	        transition: "transform " + seconds + "s"
+	      };
+	    } else if (board.won()) {
+	      return {
+	        WebkitAnimationName: "shake",
+	        WebkitAnimationDuration: Math.random() + "s",
+	        WebkitAnimationIterationCount: "2"
+	      };
+	    } else {
+	      return {};
+	    }
+	  }
+	});
+
+/***/ },
+/* 164 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var nums = {
+	  0: "zero",
+	  1: "one",
+	  2: "two",
+	  3: "three",
+	  4: "four",
+	  5: "five",
+	  6: "six",
+	  7: "seven",
+	  8: "eight",
+	  9: "nine"
+	};
+	
+	module.exports = React.createClass({
+	  displayName: "exports",
+	
+	  render: function () {
+	    var ones = nums[this.props.time % 10];
+	    var tens = nums[Math.floor(this.props.time / 10) % 10];
+	    var hundreds = nums[Math.floor(this.props.time / 100) % 10];
+	
+	    return React.createElement(
+	      "ul",
+	      { className: "timer group" },
+	      React.createElement("li", { className: "num " + hundreds }),
+	      React.createElement("li", { className: "num " + tens }),
+	      React.createElement("li", { className: "num " + ones })
+	    );
+	  }
+	});
 
 /***/ }
 /******/ ]);

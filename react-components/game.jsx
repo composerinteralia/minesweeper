@@ -1,11 +1,12 @@
 var React = require('react'),
     Minesweeper = require('../game/board'),
-    Board = require('board');
+    Board = require('board'),
+    Timer = require('timer');
 
 module.exports = React.createClass({
   getInitialState: function () {
     var board = new Minesweeper({ height: 10, width: 10, numBombs: 10 })
-    return { board: board, firstTurn: true };
+    return { board: board, firstTurn: true, time: 0 };
   },
 
   componentDidMount: function () {
@@ -14,12 +15,13 @@ module.exports = React.createClass({
 
   componentWillUnmount: function () {
     document.removeEventListener('keypress', this._onBoardReset);
+    clearInterval(this.timer)
   },
 
   render: function () {
     return(
       <div>
-
+        <Timer time={ this.state.time } />
         <Board board={ this.state.board } updateGame={ this._updateGame } />
 
         <section className="messages">
@@ -35,7 +37,11 @@ module.exports = React.createClass({
     var board = this.state.board
 
     if (board.won()) {
-      return <p className="gameover won">Congratulations! You won!</p>;
+      return (
+        <p className="gameover won">
+          Congratulations! You won in { this.state.time } seconds
+        </p>
+      );
     } else if (board.lost()) {
       return <p className="gameover lost">You lost!</p>;
     }
@@ -54,9 +60,12 @@ module.exports = React.createClass({
   },
 
   _onBoardReset: function (e) {
+    clearInterval(this.timer)
     if (!this.state.firstTurn && e.keyCode === 13) {
+      clearInterval(this.timer)
+
       var board = new Minesweeper({ height: 10, width: 10, numBombs: 10 })
-      this.setState({ board: board, firstTurn: true })
+      this.setState({ board: board, firstTurn: true, time: 0 })
     }
   },
 
@@ -65,14 +74,24 @@ module.exports = React.createClass({
 
     if (board.over()) return;
 
-    if (this.state.firstTurn && tile.bombed) {
-      board.exchange(tile)
+    if (this.state.firstTurn) {
+      this.timer = setInterval(function () {
+        this.setState({ time: this.state.time + 1 })
+      }.bind(this), 1000)
+
+      if (tile.bombed) {
+        board.exchange(tile)
+      }
     }
 
     if (altKey) {
       tile.toggleFlag();
     } else {
       tile.explore();
+    }
+
+    if (board.over()) {
+      clearInterval(this.timer);
     }
 
     this.setState({ firstTurn: false });

@@ -86,6 +86,7 @@ header > nav > a {
 .game-header > p {
   margin: 1px;
   font-size: 15px;
+  font-weight: bold;
 }
 
 @-webkit-keyframes shake {
@@ -188,6 +189,7 @@ span.bomb {
   position: relative;
   z-index: 2;
   font-size: 15px;
+  font-weight: bold;
 }
 
 .gameover {
@@ -202,4 +204,58 @@ span.bomb {
 
 .won {
   color: green;
+}
+
+.timer {
+  width: 54px;
+  background: black;
+  margin: auto;
+  padding: 2px;
+  padding-right: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.num {
+  float: left;
+  height: 28px;
+  width: 17px;
+  margin-right: 1px;
+  background: url('images/minesweeper.gif');
+}
+
+.one {
+  background-position: -16px 0px;
+}
+
+.two {
+  background-position: -32px 0px;
+}
+
+.three {
+  background-position: -49px 0px;
+}
+
+.four {
+  background-position: -65px 0px;
+}
+
+.five {
+  background-position: -81px 0px;
+}
+
+.six {
+  background-position: -97px 0px;
+}
+
+.seven {
+  background-position: -114px 0px;
+}
+
+.eight {
+  background-position: -130px 0px;
+}
+
+.nine {
+  background-position: -146px 0px;
 }
