@@ -20102,7 +20102,7 @@
 	      "div",
 	      { style: this._inlineStyling(),
 	        className: htmlClasses.join(" "),
-	        onMouseDown: this.handleClick,
+	        onMouseUp: this.handleClick,
 	        onContextMenu: function (e) {
 	          e.preventDefault();
 	        } },
