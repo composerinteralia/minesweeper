@@ -23,16 +23,30 @@ var Board = function (options) {
   this.plantBombs();
 };
 
+Board.prototype.bombCount = function () {
+  if (this.over()) return 0;
+
+  count = this.numBombs;
+
+  this.forEachTile(function (tile) {
+    if (tile.flagged) {
+      count--;
+    }
+  });
+
+  return count < 0 ? 0 : count;
+};
+
 Board.prototype.exchange = function (tile) {
   tile.removeBomb();
   this.unbombedTiles().sample(1)[0].plantBomb()
-}
+};
 
 Board.prototype.forEachTile = function (fn) {
   this.grid.forEach(function (row) {
     row.forEach(fn)
   })
-}
+};
 
 Board.prototype.generateGrid = function () {
   for (var i = 0; i < this.height; i++) {

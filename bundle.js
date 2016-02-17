@@ -19660,7 +19660,7 @@
 	var React = __webpack_require__(1),
 	    Minesweeper = __webpack_require__(160),
 	    Board = __webpack_require__(162),
-	    Timer = __webpack_require__(164);
+	    Display = __webpack_require__(165);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -19680,11 +19680,16 @@
 	  },
 	
 	  render: function () {
+	    var board = this.state.board;
+	
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(Timer, { time: this.state.time }),
-	      React.createElement(Board, { board: this.state.board, updateGame: this._updateGame }),
+	      React.createElement(
+	        Board,
+	        { board: board, updateGame: this._updateGame },
+	        React.createElement(Display, { time: this.state.time, bombCount: board.bombCount() })
+	      ),
 	      React.createElement(
 	        'section',
 	        { className: 'messages' },
@@ -19731,6 +19736,7 @@
 	  },
 	
 	  _onBoardReset: function (e) {
+	    clearInterval(this.timer);
 	    if (!this.state.firstTurn && e.keyCode === 13) {
 	      clearInterval(this.timer);
 	
@@ -19796,6 +19802,20 @@
 	  this.grid = [];
 	  this.generateGrid();
 	  this.plantBombs();
+	};
+	
+	Board.prototype.bombCount = function () {
+	  if (this.over()) return 0;
+	
+	  count = this.numBombs;
+	
+	  this.forEachTile(function (tile) {
+	    if (tile.flagged) {
+	      count--;
+	    }
+	  });
+	
+	  return count < 0 ? 0 : count;
 	};
 	
 	Board.prototype.exchange = function (tile) {
@@ -20001,9 +20021,14 @@
 	
 	  render: function () {
 	    return React.createElement(
-	      'ul',
+	      'figure',
 	      { className: 'board' },
-	      this._tiles()
+	      this.props.children,
+	      React.createElement(
+	        'ul',
+	        null,
+	        this._tiles()
+	      )
 	    );
 	  },
 	
@@ -20111,7 +20136,8 @@
 	});
 
 /***/ },
-/* 164 */
+/* 164 */,
+/* 165 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -20133,17 +20159,35 @@
 	  displayName: "exports",
 	
 	  render: function () {
-	    var ones = nums[this.props.time % 10];
-	    var tens = nums[Math.floor(this.props.time / 10) % 10];
-	    var hundreds = nums[Math.floor(this.props.time / 100) % 10];
+	    var bombCountDigits = this._digits(this.props.bombCount);
+	    var timeDigits = this._digits(this.props.time);
 	
 	    return React.createElement(
-	      "ul",
-	      { className: "timer group" },
-	      React.createElement("li", { className: "num " + hundreds }),
-	      React.createElement("li", { className: "num " + tens }),
-	      React.createElement("li", { className: "num " + ones })
+	      "div",
+	      { className: "display group" },
+	      React.createElement(
+	        "ul",
+	        { className: "nums bomb-count group" },
+	        React.createElement("li", { className: "num " + bombCountDigits[0] }),
+	        React.createElement("li", { className: "num " + bombCountDigits[1] }),
+	        React.createElement("li", { className: "num " + bombCountDigits[2] })
+	      ),
+	      React.createElement(
+	        "ul",
+	        { className: "nums timer group" },
+	        React.createElement("li", { className: "num " + timeDigits[0] }),
+	        React.createElement("li", { className: "num " + timeDigits[1] }),
+	        React.createElement("li", { className: "num " + timeDigits[2] })
+	      )
 	    );
+	  },
+	
+	  _digits: function (num) {
+	    var ones = nums[num % 10];
+	    var tens = nums[Math.floor(num / 10) % 10];
+	    var hundreds = nums[Math.floor(num / 100) % 10];
+	
+	    return [hundreds, tens, ones];
 	  }
 	});
 

@@ -1,7 +1,7 @@
 var React = require('react'),
     Minesweeper = require('../game/board'),
     Board = require('board'),
-    Timer = require('timer');
+    Display = require('display');
 
 module.exports = React.createClass({
   getInitialState: function () {
@@ -19,10 +19,13 @@ module.exports = React.createClass({
   },
 
   render: function () {
+    var board = this.state.board;
+
     return(
       <div>
-        <Timer time={ this.state.time } />
-        <Board board={ this.state.board } updateGame={ this._updateGame } />
+        <Board board={ board } updateGame={ this._updateGame } >
+          <Display time={ this.state.time } bombCount={ board.bombCount() }/>
+        </Board>
 
         <section className="messages">
           { this._gameOverStatus() }
@@ -60,6 +63,7 @@ module.exports = React.createClass({
   },
 
   _onBoardReset: function (e) {
+    clearInterval(this.timer)
     if (!this.state.firstTurn && e.keyCode === 13) {
       clearInterval(this.timer)
 

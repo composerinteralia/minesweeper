@@ -24,7 +24,7 @@ ul {
 body {
   background: url('images/background.jpg') no-repeat;
   background-size: cover;
-  font-family: 'Lora';
+  font-family: serif;
   text-align: center;
 }
 
@@ -79,8 +79,9 @@ header > nav > a {
 }
 
 .game-header > h1 {
-  font-size: 30px;
+  font-size: 36px;
   margin-bottom: 10px;
+  letter-spacing: 1.5px;
 }
 
 .game-header > p {
@@ -105,7 +106,7 @@ header > nav > a {
 
 .board {
   margin: auto;
-  height: 280px;
+  height: 321px;
   width: 280px;
   background: url('images/bomb.jpg') no-repeat;
   background-position: center;
@@ -206,7 +207,16 @@ span.bomb {
   color: green;
 }
 
-.timer {
+.display {
+  width: 270px;
+  padding: 2px 5px;
+  margin: auto;
+  background: #aaa;
+  border-bottom: 5px solid #bbb;
+  border-style: ridge;
+}
+
+.nums {
   width: 54px;
   background: black;
   margin: auto;
@@ -214,6 +224,14 @@ span.bomb {
   padding-right: 0;
   position: relative;
   z-index: 2;
+}
+
+.bomb-count {
+  float: left;
+}
+
+.timer {
+  float: right;
 }
 
 .num {
