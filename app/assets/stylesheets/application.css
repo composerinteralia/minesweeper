@@ -22,7 +22,7 @@ ul {
 }
 
 body {
-  background: url('images/background.jpg') no-repeat;
+  background: url('/assets/images/background.jpg') no-repeat;
   background-size: cover;
   font-family: 'Roboto Condensed', serif;
   text-align: center;
@@ -52,7 +52,7 @@ header > nav > a {
   margin: 5px 10px;
   height: 30px;
   width: 30px;
-  background: url('images/folder.png');
+  background: url('/assets/images/folder.png');
   background-size: cover;
 }
 
@@ -60,7 +60,7 @@ header > nav > a {
   margin: 0 10px;
   height: 40px;
   width: 40px;
-  background: url('images/github.png');
+  background: url('/assets/images/github.png');
   background-size: cover;
 }
 
@@ -68,7 +68,7 @@ header > nav > a {
   margin: 5px 10px;
   height: 30px;
   width: 30px;
-  background: url('images/linkedin.png');
+  background: url('/assets/images/linkedin.png');
   background-size: cover;
 }
 
@@ -110,7 +110,7 @@ header > nav > a {
   margin: auto;
   height: 321px;
   width: 280px;
-  background: url('images/bomb.jpg') no-repeat;
+  background: url('/assets/images/bomb.jpg') no-repeat;
   background-position: center;
   background-size: cover;
   border: 5px solid #bbb;
@@ -242,7 +242,7 @@ span.bomb {
   height: 28px;
   width: 17px;
   margin-right: 1px;
-  background: url('images/minesweeper.gif');
+  background: url('/assets/images/minesweeper.gif');
 }
 
 .one {

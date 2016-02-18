@@ -20,5 +20,5 @@ The classic puzzle game built for the browser with React.js
 ![gameover]
 
 [minesweeper]: https://composerinteralia.github.io/minesweeper/
-[gameplay]: ./images/gameplay.png
-[gameover]: ./images/gameover.png
+[gameplay]: ./app/assets/images/gameplay.png
+[gameover]: ./app/assets/images/gameover.png

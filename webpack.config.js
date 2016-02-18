@@ -2,9 +2,9 @@ var path = require('path');
 
 module.exports = {
   context: __dirname,
-  entry: "./minesweeper.jsx",
+  entry: "./frontend/minesweeper.jsx",
   output: {
-    path: "./",
+    path: "./app/assets/",
     filename: "bundle.js"
   },
   module: {
@@ -22,6 +22,6 @@ module.exports = {
   devtool: 'source-maps',
   resolve: {
     extensions: ["", ".js", '.jsx'],
-    root: [path.resolve("./react-components")]
+    root: [path.resolve("./frontend/components")]
   }
 };

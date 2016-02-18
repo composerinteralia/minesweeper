@@ -1,4 +1,9 @@
-node_modules/
+node_modules
 
-.DS_Store
+bundle.js
+bundle.js.map
+
 notes
+
+.byebug_history
+.DS_Store
