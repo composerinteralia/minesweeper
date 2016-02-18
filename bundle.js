@@ -19660,7 +19660,7 @@
 	var React = __webpack_require__(1),
 	    Minesweeper = __webpack_require__(160),
 	    Board = __webpack_require__(162),
-	    Display = __webpack_require__(165);
+	    Display = __webpack_require__(164);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -20136,8 +20136,7 @@
 	});
 
 /***/ },
-/* 164 */,
-/* 165 */
+/* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);

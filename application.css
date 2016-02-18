@@ -24,7 +24,7 @@ ul {
 body {
   background: url('images/background.jpg') no-repeat;
   background-size: cover;
-  font-family: serif;
+  font-family: 'Roboto Condensed', serif;
   text-align: center;
 }
 
@@ -35,8 +35,9 @@ header {
 }
 
 .name {
-  font-size: 24px;
+  font-size: 28px;
   float: left;
+  text-shadow: #664 0 0 1px;
 }
 
 header > nav {
@@ -79,15 +80,16 @@ header > nav > a {
 }
 
 .game-header > h1 {
-  font-size: 36px;
+  font-size: 32px;
   margin-bottom: 10px;
   letter-spacing: 1.5px;
+  text-shadow: #444 1px 1px 1px;
 }
 
 .game-header > p {
   margin: 1px;
-  font-size: 15px;
-  font-weight: bold;
+  font-size: 16px;
+  text-shadow: #664 0 0 1px;
 }
 
 @-webkit-keyframes shake {
@@ -189,13 +191,14 @@ span.bomb {
   margin-top: 20px;
   position: relative;
   z-index: 2;
-  font-size: 15px;
+  font-size: 17px;
   font-weight: bold;
+    text-shadow: #664 0 0 1px;
 }
 
 .gameover {
   font-weight: bold;
-  font-size: 20px;
+  font-size: 21px;
   margin-bottom: 5px;
 }
 
