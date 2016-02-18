@@ -1,6 +1,6 @@
 #[Minesweeper][minesweeper]
 
-The classic puzzle game built for the browser with React.js
+The classic puzzle game built for the browser using [Laris][laris], my own lightweight web framework
 
 ###[Play Now!][minesweeper]
 
@@ -19,6 +19,7 @@ The classic puzzle game built for the browser with React.js
 ![gameplay]
 ![gameover]
 
-[minesweeper]: https://composerinteralia.github.io/minesweeper/
+[minesweeper]: http://minesweepers.herokuapp.com/
+[laris]: http://github.com/composerinteralia/laris/
 [gameplay]: ./app/assets/images/gameplay.png
 [gameover]: ./app/assets/images/gameover.png
