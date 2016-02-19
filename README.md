@@ -21,5 +21,5 @@ The classic puzzle game built for the browser using [Laris][laris], my own light
 
 [minesweeper]: http://minesweepers.herokuapp.com/
 [laris]: http://github.com/composerinteralia/laris/
-[gameplay]: ./app/assets/images/gameplay.png
-[gameover]: ./app/assets/images/gameover.png
+[gameplay]: ./docs/images/gameplay.png
+[gameover]: ./docs/images/gameover.png

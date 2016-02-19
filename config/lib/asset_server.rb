@@ -21,7 +21,7 @@ class AssetServer
     path = "#{dir_path}/../../app#{req.path}"
 
     ext = File.extname(path)
-    ext = ".js" if ext == ".map"
+    ext = ".json" if ext == ".map"
     res["Content-Type"] = Rack::Mime::MIME_TYPES[ext]
 
     res.write(File.read(path))
