@@ -106,15 +106,27 @@ header > nav > a {
 	100% { -webkit-transform: translate(1px, -2px); }
 }
 
-.board {
+.game {
+  height: 332px;
+  width: 450px;
   margin: auto;
-  height: 321px;
+  position: relative;
+  left: 80px;
+}
+
+.board {
+  float: left;
+  margin: 0;
   width: 280px;
   background: url('/assets/images/bomb.jpg') no-repeat;
   background-position: center;
   background-size: cover;
   border: 5px solid #bbb;
   border-style: ridge;
+}
+
+.scores {
+  float: right;
 }
 
 .tile {
@@ -226,6 +238,7 @@ span.bomb {
 
 .initials > input {
   float: left;
+  background-color: #ede;
   border: 2px solid #767;
   border-radius: 10px;
   width: 60px;

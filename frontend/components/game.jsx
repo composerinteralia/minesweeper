@@ -2,19 +2,31 @@ var React = require('react'),
     Minesweeper = require('../game/board'),
     Board = require('board'),
     Display = require('display')
-    ScoreUtil = require('../util/score_util');
+    ScoreUtil = require('../util/score_util'),
+    ScoreStore = require('../stores/score_store');
 
 module.exports = React.createClass({
   getInitialState: function () {
     var board = new Minesweeper({ height: 10, width: 10, numBombs: 10 })
-    return { board: board, firstTurn: true, time: 0, initials: "" };
+    return {
+      board: board,
+      firstTurn: true,
+      time: 0,
+      initials: "",
+      scores: ScoreStore.get()
+    };
   },
 
   componentDidMount: function () {
+    this.scoreToken = ScoreStore.addListener(this._onScoreChange);
+    ScoreUtil.getScores()
+
     document.addEventListener('keypress', this._onEnter);
   },
 
   componentWillUnmount: function () {
+    ScoreStore.removeListner(this.scoreToken);
+
     document.removeEventListener('keypress', this._onEnter);
     clearInterval(this.timer)
   },
@@ -23,17 +35,25 @@ module.exports = React.createClass({
     var board = this.state.board;
 
     return(
-      <div>
-        <Board board={ board } updateGame={ this._updateGame } >
-          <Display time={ this.state.time } bombCount={ board.bombCount() }/>
-        </Board>
+      <main>
+        <div className="game group">
+          <Board board={ board } updateGame={ this._updateGame } >
+            <Display time={ this.state.time } bombCount={ board.bombCount() }/>
+          </Board>
 
-        <section className="messages">
-          { this._gameOverStatus() }
-          <p className="replay">{ this._replayText() }</p>
-        </section>
+          <ul className="scores">
+            <h3>High Scores</h3>
+            { this.state.scores.map(function (score) {
+              return <li key={ score.id }>{ score.initials }: { score.score }</li>
+            })}
+          </ul>
+        </div>
 
-      </div>
+          <section className="messages">
+            { this._gameOverStatus() }
+            <p className="replay">{ this._replayText() }</p>
+          </section>
+      </main>
     );
   },
 
@@ -87,8 +107,12 @@ module.exports = React.createClass({
     }
   },
 
+  _onScoreChange: function () {
+    this.setState({ scores: ScoreStore.get() })
+  },
+
   _scoreSubmit: function () {
-    if (this.state.initials) {
+    if (this.state.initials && this.state.board.won()) {
       ScoreUtil.createScore({
         score: {
           score: this.state.time,

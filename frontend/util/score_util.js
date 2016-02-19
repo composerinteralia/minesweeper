@@ -1,12 +1,14 @@
+var ScoreStore = require('../stores/score_store')
+
 module.exports = {
-  getScores: function (success) {
+  getScores: function () {
     var xmlhttp = new XMLHttpRequest();
 
     xmlhttp.onreadystatechange = function () {
       if (xmlhttp.readyState == XMLHttpRequest.DONE) {
         if(xmlhttp.status == 200){
           var response = JSON.parse(xmlhttp.responseText);
-          success && success(response);
+          ScoreStore.receiveScores(response);
         }
       }
     }
@@ -24,7 +26,7 @@ module.exports = {
       if (xmlhttp.readyState == XMLHttpRequest.DONE) {
         if(xmlhttp.status == 200){
           var response = JSON.parse(xmlhttp.responseText);
-          success && success(response);
+          ScoreStore.receiveSingleScore(response);
         }
       }
     }
