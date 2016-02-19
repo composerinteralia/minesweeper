@@ -1,20 +1,21 @@
 var React = require('react'),
     Minesweeper = require('../game/board'),
     Board = require('board'),
-    Display = require('display');
+    Display = require('display')
+    ScoreUtil = require('../util/score_util');
 
 module.exports = React.createClass({
   getInitialState: function () {
     var board = new Minesweeper({ height: 10, width: 10, numBombs: 10 })
-    return { board: board, firstTurn: true, time: 0 };
+    return { board: board, firstTurn: true, time: 0, initials: "" };
   },
 
   componentDidMount: function () {
-    document.addEventListener('keypress', this._onBoardReset);
+    document.addEventListener('keypress', this._onEnter);
   },
 
   componentWillUnmount: function () {
-    document.removeEventListener('keypress', this._onBoardReset);
+    document.removeEventListener('keypress', this._onEnter);
     clearInterval(this.timer)
   },
 
@@ -41,9 +42,21 @@ module.exports = React.createClass({
 
     if (board.won()) {
       return (
-        <p className="gameover won">
-          Congratulations! You won in { this.state.time } seconds
-        </p>
+        <div>
+          <p className="gameover won">
+            Congratulations! You won in { this.state.time } seconds
+          </p>
+
+          <form className="initials group">
+            <label htmlFor="initials">Enter your initials: </label>
+            <input
+              id="initials"
+              type="text"
+              onChange={ this._setInitials }
+              value={ this.state.initials }>
+            </input>
+          </form>
+        </div>
       );
     } else if (board.lost()) {
       return <p className="gameover lost">You lost!</p>;
@@ -62,14 +75,31 @@ module.exports = React.createClass({
     }
   },
 
-  _onBoardReset: function (e) {
-    clearInterval(this.timer)
+  _onEnter: function (e) {
     if (!this.state.firstTurn && e.keyCode === 13) {
+      e.preventDefault();
       clearInterval(this.timer)
+
+      this._scoreSubmit()
 
       var board = new Minesweeper({ height: 10, width: 10, numBombs: 10 })
       this.setState({ board: board, firstTurn: true, time: 0 })
     }
+  },
+
+  _scoreSubmit: function () {
+    if (this.state.initials) {
+      ScoreUtil.createScore({
+        score: {
+          score: this.state.time,
+          initials: this.state.initials
+        }
+      })
+    }
+  },
+
+  _setInitials: function (e) {
+    this.setState({ initials: e.target.value.slice(0,3) });
   },
 
   _updateGame: function (tile, altKey) {

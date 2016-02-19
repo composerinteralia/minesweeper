@@ -1,4 +1,4 @@
-html, body, header, footer, main, h1, p, a, ul, li, div, span {
+html, body, header, footer, main, h1, p, a, ul, li, div, span, input {
   margin: 0;
   padding: 0;
   border: 0;
@@ -193,21 +193,46 @@ span.bomb {
   z-index: 2;
   font-size: 17px;
   font-weight: bold;
-    text-shadow: #664 0 0 1px;
+  text-shadow: #664 0 0 1px;
 }
 
 .gameover {
   font-weight: bold;
-  font-size: 21px;
+  font-size: 20px;
   margin-bottom: 5px;
 }
 
 .lost {
   color: #f10;
+  text-shadow: none;
 }
 
 .won {
   color: green;
+  text-shadow: none;
+}
+
+.initials {
+  width: 200px;
+  margin: auto;
+  margin-bottom: 12px;
+}
+
+.initials > label {
+  float: left;
+  padding-top: 6px;
+  margin-right: 10px;
+}
+
+.initials > input {
+  float: left;
+  border: 2px solid #767;
+  border-radius: 10px;
+  width: 60px;
+  font-size: 18px;
+  text-align: center;
+  padding: 4px 0;
+  box-shadow: #664 0 0 4px;
 }
 
 .display {

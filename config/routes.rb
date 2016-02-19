@@ -6,4 +6,7 @@ ROUTER = Router.new
 
 ROUTER.draw do
   get Regexp.new("^/$"), StaticPagesController, :root
+
+  get Regexp.new("^/scores$"), ScoresController, :index
+  post Regexp.new("^/scores$"), ScoresController, :create
 end
