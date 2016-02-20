@@ -41,18 +41,13 @@ module.exports = React.createClass({
             <Display time={ this.state.time } bombCount={ board.bombCount() }/>
           </Board>
 
-          <ul className="scores">
-            <h3>High Scores</h3>
-            { this.state.scores.map(function (score) {
-              return <li key={ score.id }>{ score.initials }: { score.score }</li>
-            })}
-          </ul>
+          { this._highScores() }
         </div>
 
-          <section className="messages">
-            { this._gameOverStatus() }
-            <p className="replay">{ this._replayText() }</p>
-          </section>
+        <section className="messages">
+          { this._gameOverStatus() }
+          <p className="replay">{ this._replayText() }</p>
+        </section>
       </main>
     );
   },
@@ -72,6 +67,7 @@ module.exports = React.createClass({
             <input
               id="initials"
               type="text"
+              tabIndex="1"
               onChange={ this._setInitials }
               value={ this.state.initials }>
             </input>
@@ -109,6 +105,25 @@ module.exports = React.createClass({
 
   _onScoreChange: function () {
     this.setState({ scores: ScoreStore.get() })
+  },
+
+  _highScores: function () {
+    return (
+      <div className="scores">
+        <h3>High Scores</h3>
+        <table><tbody>
+          { this.state.scores.map(function (score, i) {
+            return (
+              <tr key={ score.id }>
+                <td>{ i + 1 + "." }</td>
+                <td>{ score.initials }:</td>
+                <td>{ score.score }</td>
+              </tr>
+            )
+          })}
+        </tbody></table>
+      </div>
+    )
   },
 
   _scoreSubmit: function () {
