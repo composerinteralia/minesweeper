@@ -26,4 +26,4 @@ The classic puzzle game built for the browser using [Laris][laris], my own light
 [gameplay]: ./docs/images/gameplay.png
 [gameover]: ./docs/images/gameover.png
 
-[score]: ./frontend/util/score_util.js
+[score]: ./frontend/stores/score_store.js
