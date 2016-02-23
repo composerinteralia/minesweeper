@@ -52,7 +52,7 @@ module.exports = React.createClass({
 
     if (board.lost()) {
       var x = Math.round((Math.random() - 0.5) * (window.innerWidth - 300));
-      var y = Math.round((Math.random() - 0.55) * (window.innerHeight - 200));
+      var y = Math.round((Math.random() - 0.6) * (window.innerHeight - 200));
       var degrees = Math.round((Math.random() - 0.5) * 1860);
       var seconds = Math.random();
 

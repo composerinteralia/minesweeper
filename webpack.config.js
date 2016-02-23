@@ -4,7 +4,7 @@ module.exports = {
   context: __dirname,
   entry: "./frontend/minesweeper.jsx",
   output: {
-    path: "./app/assets/",
+    path: "./app/assets/javascripts",
     filename: "bundle.js"
   },
   module: {

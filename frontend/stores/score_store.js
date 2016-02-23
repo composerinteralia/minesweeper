@@ -5,9 +5,7 @@ var _callbacks = {},
 module.exports = {
   addListener: function (fn) {
     _token++
-
     _callbacks[_token] = fn
-
     return _token
   },
 

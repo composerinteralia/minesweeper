@@ -104,7 +104,6 @@ header > nav > a {
 
 .game-header > p {
   margin: 1px;
-  font-size: 16px;
   text-shadow: #a86 0 0 1px;
 }
 
@@ -338,4 +337,20 @@ span.bomb {
 
 .nine {
   background-position: -146px 0px;
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 10px;
+  text-shadow: #a86 0 0 1px;
+}
+
+footer a {
+  color: #06a;
+}
+
+footer a:hover {
+  color: #07c
 }
