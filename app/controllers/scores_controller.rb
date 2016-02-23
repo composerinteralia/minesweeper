@@ -1,6 +1,5 @@
 require_relative 'lib/controller_base'
 require_relative '../models/score'
-require 'byebug'
 
 class ScoresController < ControllerBase
   def create
