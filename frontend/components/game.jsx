@@ -56,26 +56,38 @@ module.exports = React.createClass({
     var board = this.state.board
 
     if (board.won()) {
+      debugger
       return (
         <div>
           <p className="gameover won">
             Congratulations! You won in { this.state.time } seconds
           </p>
 
-          <form className="initials group">
-            <label htmlFor="initials">Enter your initials: </label>
-            <input
-              id="initials"
-              type="text"
-              tabIndex="1"
-              onChange={ this._setInitials }
-              value={ this.state.initials }>
-            </input>
-          </form>
+          { this._initialsInput() }
+
         </div>
       );
     } else if (board.lost()) {
       return <p className="gameover lost">You lost!</p>;
+    }
+  },
+
+  _initialsInput: function () {
+    var lowestScore = this.state.scores[9].score
+
+    if (lowestScore && this.state.time < lowestScore) {
+      return (
+        <div className="initials group">
+          <label htmlFor="initials">Enter your initials: </label>
+          <input
+            id="initials"
+            type="text"
+            tabIndex="1"
+            onChange={ this._setInitials }
+            value={ this.state.initials }>
+          </input>
+        </div>
+      )
     }
   },
 
