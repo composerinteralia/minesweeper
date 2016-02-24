@@ -34,6 +34,7 @@ module.exports = {
     xmlhttp.open('POST', '/scores');
     xmlhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    // Please don't cheat!
     xmlhttp.send(JSON.stringify(data));
   }
 

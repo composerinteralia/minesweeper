@@ -140,6 +140,7 @@ module.exports = React.createClass({
 
   _scoreSubmit: function () {
     if (this.state.initials && this.state.board.won()) {
+      // Please don't cheat!
       ScoreUtil.createScore({
         score: {
           score: this.state.time,
