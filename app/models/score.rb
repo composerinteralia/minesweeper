@@ -1,5 +1,5 @@
-require_relative 'lib/activerecord_base'
+require_relative 'lib/larisrecord_base'
 
-class Score < ActiverecordBase
+class Score < LarisrecordBase
   finalize!
 end
