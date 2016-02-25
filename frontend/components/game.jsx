@@ -56,7 +56,7 @@ module.exports = React.createClass({
     var board = this.state.board
 
     if (board.won()) {
-      debugger
+
       return (
         <div>
           <p className="gameover won">
