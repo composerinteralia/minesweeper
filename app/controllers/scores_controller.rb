@@ -1,6 +1,3 @@
-require_relative 'lib/controller_base'
-require_relative '../models/score'
-
 class ScoresController < ControllerBase
   def create
     # strong params would be nice
