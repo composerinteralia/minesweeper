@@ -1,10 +1,10 @@
-#[Minesweeper][minesweeper]
+# [Minesweeper][minesweeper]
 
 The classic puzzle game built for the browser using [Laris][laris], my own lightweight web framework
 
-###[Play Now!][minesweeper]
+### [Play Now!][minesweeper]
 
-##Details:
+## Details:
 * Clicking a tile either explodes it or reveals it and recursively reveals any safe neighbors
 * Right clicking (or alt + click) flags tiles as unsafe
 * Performance enhanced by caching tile's neighbors and neighboring bomb count
@@ -15,7 +15,7 @@ The classic puzzle game built for the browser using [Laris][laris], my own light
 * Prevents first-turn loss by moving the bomb to another tile
 * Implements a simple dispatcher for the [high score store][score]
 
-##Screenshots:
+## Screenshots:
 
 ![gameplay]
 ![gameover]
